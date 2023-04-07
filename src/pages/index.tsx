@@ -69,6 +69,7 @@ const PostView = (props: PostWithUser) => {
       <Image
         className="h-12 w-12 rounded-full"
         src={author.profilePicture}
+        // This comment is required to make emmet work (its werid, i know)
         alt={`@${author.username}'s profile picture`}
         width={48}
         height={48}
