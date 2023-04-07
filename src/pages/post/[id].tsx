@@ -10,7 +10,6 @@ import Image from "next/image";
 import { LoadingSpinner, LoadingPage } from "@/components/LoadingSpinner";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import Link from "next/link";
 
 dayjs.extend(relativeTime);
 
@@ -70,16 +69,13 @@ const PostView = (props: PostWithUser) => {
       <Image
         className="h-12 w-12 rounded-full"
         src={author.profilePicture}
-        // This comment is required to make emmet work (its werid, i know)
         alt={`@${author.username}'s profile picture`}
         width={48}
         height={48}
       />
       <div className="flex flex-col">
         <div className="flex gap-2 text-slate-300">
-          <Link href={`/@${author.username}`}>
-            <span className="font-thin">{`@${author.username}`}</span>
-          </Link>
+          <span>{`@${author.username}`}</span>
           <span>{`· ${dayjs(post.createdAt).fromNow()}`}</span>
         </div>
         <span className="">{post.content}</span>
