@@ -5,6 +5,11 @@ import { api } from "@/utils/api";
 
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { PageLayout } from "@/components/Layout";
+import Image from "next/image";
+import PostView from "@/components/PostView";
+import { LoadingPage } from "@/components/LoadingSpinner";
+import { generateSsgHelper } from "@/server/helpers/ssgHelper";
 
 dayjs.extend(relativeTime);
 
@@ -26,7 +31,7 @@ const ProfileFeed = (props: { userId: string }) => {
   );
 };
 
-const SinglePostPage: NextPage<{ username: string }> = ({ username }) => {
+const ProfilePage: NextPage<{ username: string }> = ({ username }) => {
   const { data } = api.profile.getUserByUsername.useQuery({
     username,
   });
@@ -62,21 +67,8 @@ const SinglePostPage: NextPage<{ username: string }> = ({ username }) => {
   );
 };
 
-import { createProxySSGHelpers } from "@trpc/react-query/ssg";
-import { appRouter } from "@/server/api/root";
-import { prisma } from "@/server/db";
-import superjson from "superjson";
-import Image from "next/image";
-import { PageLayout } from "@/components/Layout";
-import { LoadingPage } from "@/components/LoadingSpinner";
-import PostView from "@/components/PostView";
-
 export const getStaticProps: GetStaticProps = async (context) => {
-  const ssg = createProxySSGHelpers({
-    router: appRouter,
-    ctx: { prisma, userId: null },
-    transformer: superjson, // optional - adds superjson serialization
-  });
+  const ssg = generateSsgHelper();
 
   const slug = context.params?.slug;
 
@@ -98,4 +90,4 @@ export const getStaticPaths = () => {
   return { paths: [], fallback: "blocking" };
 };
 
-export default SinglePostPage;
+export default ProfilePage;
