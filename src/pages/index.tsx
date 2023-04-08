@@ -1,19 +1,13 @@
 import { type NextPage } from "next";
-import Head from "next/head";
-
-import { api, type RouterOutputs } from "@/utils/api";
+import { api } from "@/utils/api";
 import { SignInButton, useUser } from "@clerk/nextjs";
 
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import Image from "next/image";
 import { LoadingSpinner, LoadingPage } from "@/components/LoadingSpinner";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import Link from "next/link";
 import { PageLayout } from "@/components/Layout";
-
-dayjs.extend(relativeTime);
+import PostView from "@/components/PostView";
 
 const Home: NextPage = () => {
   const { isLoaded: userLoaded, isSignedIn } = useUser();
@@ -25,14 +19,12 @@ const Home: NextPage = () => {
   if (!userLoaded) return <div />;
 
   return (
-  
-      <PageLayout>
-        <div className="flex border-b border-slate-400 p-4">
-          {!isSignedIn ? <SignInButton /> : <CreatePostWizard />}
-        </div>
-        <Feed />
-      </PageLayout>
-   
+    <PageLayout>
+      <div className="flex border-b border-slate-400 p-4">
+        {!isSignedIn ? <SignInButton /> : <CreatePostWizard />}
+      </div>
+      <Feed />
+    </PageLayout>
   );
 };
 
@@ -48,35 +40,6 @@ const Feed = () => {
       {data.map((fullPost) => (
         <PostView {...fullPost} key={fullPost.post.id} />
       ))}
-    </div>
-  );
-};
-
-type PostWithUser = RouterOutputs["posts"]["getAll"][number];
-const PostView = (props: PostWithUser) => {
-  const { post, author } = props;
-  return (
-    <div
-      key={post.id}
-      className="flex items-center gap-5 border-b border-slate-400 p-4 text-xl"
-    >
-      <Image
-        className="h-12 w-12 rounded-full"
-        src={author.profilePicture}
-        // This comment is required to make emmet work (its werid, i know)
-        alt={`@${author.username}'s profile picture`}
-        width={48}
-        height={48}
-      />
-      <div className="flex flex-col">
-        <div className="flex gap-2 text-slate-300">
-          <Link href={`/@${author.username}`}>
-            <span className="font-thin">{`@${author.username}`}</span>
-          </Link>
-          <span>{`· ${dayjs(post.createdAt).fromNow()}`}</span>
-        </div>
-        <span className="">{post.content}</span>
-      </div>
     </div>
   );
 };
