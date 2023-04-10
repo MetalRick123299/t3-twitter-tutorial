@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import { api } from "@/utils/api";
-import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
 
 import Image from "next/image";
 import { LoadingSpinner, LoadingPage } from "@/components/LoadingSpinner";
@@ -23,14 +23,7 @@ const Home: NextPage = () => {
   return (
     <PageLayout>
       <div className="flex border-b border-slate-400 p-4">
-        {!isSignedIn ? (
-          <SignInButton />
-        ) : (
-          <>
-            <SignOutButton />
-            <CreatePostWizard />
-          </>
-        )}
+        {!isSignedIn ? <SignInButton /> : <CreatePostWizard />}
       </div>
       <Feed />
     </PageLayout>
