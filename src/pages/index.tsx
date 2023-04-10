@@ -9,6 +9,8 @@ import { toast } from "react-hot-toast";
 import { PageLayout } from "@/components/Layout";
 import PostView from "@/components/PostView";
 
+import { z } from "zod";
+
 const Home: NextPage = () => {
   const { isLoaded: userLoaded, isSignedIn } = useUser();
 
@@ -82,11 +84,16 @@ const CreatePostWizard = () => {
         placeholder="Type some emojis!"
         className="grow bg-transparent outline-none"
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={(e) => {
+          const value = e.target.value;
+          const isEmoji = z.string().emoji().safeParse(value).success;
+          if (value === "" || isEmoji) {
+            setInput(e.target.value);
+          }
+        }}
         disabled={isPosting}
         onKeyDown={(e) => {
-          e.preventDefault();
-          if (input !== "") {
+          if (input !== "" && e.key === "Enter") {
             mutate({ content: input });
           }
         }}
